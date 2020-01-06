@@ -51,3 +51,7 @@ $this->title = 'My Yii Application';
 
     </div>
 </div>
+
+<div>
+<?= Yii::t('common', 'Hello Guy') ?>
+</div>

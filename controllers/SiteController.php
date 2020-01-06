@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -9,6 +10,13 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\EntryForm;
+use app\models\Utilisateur;
+use app\models\EntryUserForm;
+use app\components\User;
+use app\components\InsertBehavior;
+use app\models\UploadForm;
+use yii\web\UploadedFile;
 
 class SiteController extends Controller
 {
@@ -51,6 +59,10 @@ class SiteController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            'page' => [
+                'class' => \yii\web\ViewAction::className(),
+                'viewPrefix' => 'pages/' . \Yii::$app->language
+            ]
         ];
     }
 
@@ -125,4 +137,76 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionDire($message = 'Hello')
+    {
+        return $this->render('dire', ['message' => $message]);
+    }
+
+    public function actionEntry()
+    {
+        $model = new EntryForm;
+
+        // event handling logic
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return $this->render('entry-confirm', ['model' => $model]);
+        } else {
+            return $this->render('entry', ['model' => $model]);
+        }
+    }
+
+    public function actionUser()
+    {
+        $model = new EntryUserForm;
+
+        $utilisateur = new Utilisateur;
+        $utilisateur->attachBehavior('InsertBehavior', new InsertBehavior);
+
+        /*$user = new User;
+        $user->on(User::VALID_DATA, function ($event) {
+            /*Yii::$app->db->createCommand('INSERT INTO `Utilisateur` VALUES (:number, :name, :email)', [
+                ':number' => $event->number, ':name' => $event->name,':email'=>$event->email,
+            ])->execute();
+            echo 'Allo';
+
+        });*/
+
+
+        // event handling logic
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // print_r($model->name);
+
+            $utilisateur->number = $model->number;
+            $utilisateur->name = $model->name;
+            $utilisateur->email = $model->email;
+            $utilisateur->save();
+            //$utilisateur->trigger('beforeValidate');
+            //$user.valid($model->number, $model->name, $model->email);
+
+            //$this->render('Utilisateur', ['model' => $model]);
+            return $this->render('user-confirm', ['model' => $model]);
+        } else {
+            return $this->render('user', ['model' => $model]);
+        }
+    }
+
+    public function actionUpload()
+    {
+        $model = new UploadForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+               Yii::$app->session->setFlash('success', 'You have successfully uploaded file');
+                // le fichier a été chargé avec succès sur le serveur
+                return;
+            }
+            Yii::$app->session->setFlash('success', 'You have successfully uploaded file');
+            
+        }
+        return $this->render('upload', ['model' => $model]);
+    }
+
 }
