@@ -15,6 +15,7 @@ use app\models\Utilisateur;
 use app\models\EntryUserForm;
 use app\components\User;
 use app\components\InsertBehavior;
+use app\models\Test;
 use app\models\UploadForm;
 use yii\web\UploadedFile;
 
@@ -73,7 +74,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $model = new Test();
+        
+        echo "Le debut";
+        
+        if ($model->load(Yii::$app->request->post())) {
+            //$model->upload();
+            Yii::debug("Hey hoooo");
+            echo "Hey";
+        }
         return $this->render('index');
+        
     }
 
     /**
@@ -207,6 +218,15 @@ class SiteController extends Controller
             
         }
         return $this->render('upload', ['model' => $model]);
+    }
+
+    public function actionChange() {
+
+        echo "Je suis là";
+        Yii::$app->language = 'fr';
+        echo "Je suis là encore";
+        $this->render('index');
+
     }
 
 }

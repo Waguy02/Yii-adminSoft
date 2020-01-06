@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 
 class AddLanguageForm extends Model
 {
@@ -18,40 +19,33 @@ class AddLanguageForm extends Model
 
     public function rules()
     {
+        
         return [
             [['code', 'nom', 'source'], 'required'],
-            [['source'], 'file', 'skipOnEmpty' => false, 'extensions' => 'php'],
+           // [['source'], 'file', 'skipOnEmpty' => false, 'extensions' => 'php, jpg'],
         ];
     }
 
     public function upload()
     {
-        echo "Je regarde l'upload déjà";
+
         if ($this->validate()) {
-            echo "Je me valide";
-            $this->path ='messages';
-            $this->filename = \Yii::$app->session['kodeimport'] . '-' . \Yii::$app->user->identity->username . '.' . $this->source->extension;
-            $this->source->saveAs($this->path . DIRECTORY_SEPARATOR . $this->filename);
-         //   $this->source->saveAs('messages/'.$this->code.'/'. $this->source->baseName . '.' . $this->source->extension);
-            return true;
-        } else {
-            return false;
-        }
+
+            $this->path =\Yii::$app->basePath.'/messages/'.$this->code.'/';
+            FileHelper::createDirectory($this->path);
+
+            $this->filename = $this->source->baseName . '.' . $this->source->extension;
+            $this->source->saveAs($this->path . $this->filename);
+            //$this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+
+           return true;
+       } else {
+           return false;
+       }
+
     }
     
-    /*public function upload()
-    {
-        if ($this->validate()) {
-            // backend/web/files
-            $this->path ='web/files';
-            $this->filename = Yii::$app->session['kodeimport'] . '-' . Yii::$app->user->identity->username . '.' . $this->excelFile->extension;
-            $this->excelFile->saveAs($this->path . DIRECTORY_SEPARATOR . $this->filename);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+   
    /**
      * 
      * @return string
