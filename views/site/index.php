@@ -1,6 +1,9 @@
 <?php
 
 /* @var $this yii\web\View */
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 $this->title = 'My Yii Application';
 ?>
@@ -53,5 +56,17 @@ $this->title = 'My Yii Application';
 </div>
 
 <div>
-<?= Yii::t('common', 'Hello Guy') ?>
+    <?= Yii::t('common', 'Hello Guy') ?>
+</div>
+
+<div>
+
+    <?php $form = ActiveForm::begin(); ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Soumettre', ['class' => 'btn btn-primary']) ?>
+    </div>
+    
+    <?php ActiveForm::end(); ?>
+    <?= Html::a('Soumettre', ['change'], ['class' => 'btn btn-primary']) ?>
 </div>

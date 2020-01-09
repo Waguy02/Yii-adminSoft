@@ -1,33 +1,8 @@
 <?php
-namespace  app\config;
-use app\modules\BDManager\BDManager;
-
-
+use app\components\LanguageSelector;
 
 $params = require __DIR__ . '/params.php';
-
-
-global $db;
-
- function loadDbConfig()
-{
-
-    $config = parse_ini_file("DB.INI");
-
-
-    global $db;
-    $db['class']='yii\db\Connection';
-    $db['dsn']=$config['dsn'];
-    $db['username']=$config['username'];
-    $db['password']=$config['password'];
-    $db['charset']=$config['charset'];
-    return $db;
-}
-
-
-
-
-
+$db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
@@ -37,10 +12,18 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'sourceLanguage' => 'en',
+    'language' => 'en',
+    'bootstrap' => [
+        [
+            'class' => 'app\components\LanguageSelector',
+            'supportedLanguages' => ['en','rx','fr', 'th-TH', 'de'],
+        ],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'WBUA6ekBwLrtp0Zkrkhp-YDpXSrBGZdF',
+            'cookieValidationKey' => 'PGTKUDgf6tqRmgNQgFa1c9Sw8gOHeq1B',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -68,26 +51,26 @@ $config = [
                 ],
             ],
         ],
-        'db' => loadDBConfig(),
+        'db' => $db,
+        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-
+        */
+        'i18n' => [
+            'translations' => [
+                'common*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                ]
+            ]
+        ]
     ],
     'params' => $params,
 ];
-
-
-$config['modules']['BDManager']=[
-'class'=> 'app\modules\bdManager\BDManager'
-
-
-];
-
-$config['bootstrap'][]='BDManager';
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

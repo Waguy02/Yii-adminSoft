@@ -10,6 +10,7 @@ use app\models\AddLanguageForm;
 use app\models\ChooseLanForm;
 use app\widgets\Alert;
 use yii\web\UploadedFile;
+use yii\web\Cookie;
 
 class LanguesController extends Controller
 {
@@ -71,5 +72,18 @@ class LanguesController extends Controller
             echo $model->lan;
            
         }
+    }
+    public function actionLanguage()
+    {
+        echo "Alllezzz";
+        $language = Yii::$app->request->post('language');
+        Yii::$app->language = $language;
+        
+        $languageCookie = new Cookie([
+            'name' => 'language',
+            'value' => $language,
+            'expire' => time() + 60, // 30 days
+        ]);
+        Yii::$app->response->cookies->add($languageCookie);
     }
 }

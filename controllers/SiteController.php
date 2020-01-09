@@ -18,6 +18,7 @@ use app\components\InsertBehavior;
 use app\models\Test;
 use app\models\UploadForm;
 use yii\web\UploadedFile;
+use yii\web\Cookie;
 
 class SiteController extends Controller
 {
@@ -75,16 +76,15 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $model = new Test();
-        
+
         echo "Le debut";
-        
+
         if ($model->load(Yii::$app->request->post())) {
             //$model->upload();
             Yii::debug("Hey hoooo");
             echo "Hey";
         }
         return $this->render('index');
-        
     }
 
     /**
@@ -210,23 +210,62 @@ class SiteController extends Controller
         if (Yii::$app->request->isPost) {
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($model->upload()) {
-               Yii::$app->session->setFlash('success', 'You have successfully uploaded file');
+                Yii::$app->session->setFlash('success', 'You have successfully uploaded file');
                 // le fichier a été chargé avec succès sur le serveur
                 return;
             }
             Yii::$app->session->setFlash('success', 'You have successfully uploaded file');
-            
         }
         return $this->render('upload', ['model' => $model]);
     }
 
-    public function actionChange() {
+    public function actionChange()
+    {
 
         echo "Je suis là";
-        Yii::$app->language = 'fr';
-        echo "Je suis là encore";
+        Yii::$app->language = 'en';
+        echo "Je suis là encore ";
+        echo Yii::$app->language;
         $this->render('index');
-
     }
 
+    /*public function actionLanguage() {
+        $language = Yii::$app->request->post('language');
+        Yii::$app->language = $language;
+        echo "Helloooooo";
+        $languageCookie = new Cookie([
+            'name' => 'language',
+            'value' => $language,
+            'expire' => time() + 60 * 60 * 24 * 30, // 30 days
+        ]);
+        Yii::$app->response->cookies->add($languageCookie);
+    
+        $localeCookie = new yii\web\Cookie([
+            'name' => 'locale',
+            'value' => Yii::$app->params['formattedLanguages'][$language]['locale'],
+            'expire' => time() + 60 * 60 * 24 * 30, // 30 days
+        ]);
+        Yii::$app->response->cookies->add($localeCookie);
+    
+       /* $calendarCookie = new yii\web\Cookie([
+            'name' => 'calendar',
+            'value' => Yii::$app->params['formattedLanguages'][$language]['calendar'],
+            'expire' => time() + 60 * 60 * 24 * 30, // 30 days
+        ]); 
+        Yii::$app->response->cookies->add($calendarCookie); *
+    } */
+
+    public function actionLanguage()
+    {
+        echo "Alllezzz";
+        $language = Yii::$app->request->post('language');
+        Yii::$app->language = $language;
+        
+        $languageCookie = new Cookie([
+            'name' => 'language',
+            'value' => $language,
+            'expire' => time() + 60, // 30 days
+        ]);
+        Yii::$app->response->cookies->add($languageCookie);
+    }
 }

@@ -31,32 +31,49 @@ AppAsset::register($this);
 
 <body>
     <?php $this->beginBody() ?>
-    
+
+
+
     <div class="wrap">
 
-    <?php
-    
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    
-    
-    echo $this->render('../langues/select-language');
-    NavBar::end();
+       
 
-    ?>
+        <?php
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        /* 
+         <?= Html::beginForm(['site/language'], 'post', [
+            'enctype' => 'multipart/form-data',
+            'id' => 'lang-form',
         ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
-    </div>
+        <?= Html::dropDownList('language', Yii::$app->language, ['en' => 'English', 'fr' => 'Francais', 'rx' => 'Russe']) ?>
+        <?= Html::submitButton('Change') ?>
+        <?= Html::endForm() ?>
+        
+        ['site/language'], 'post', [
+            'enctype' => 'multipart/form-data',
+            'id' => 'lang-form',
+        ] */
+        NavBar::begin([
+            'brandLabel' => Yii::$app->name,
+            'brandUrl' => Yii::$app->homeUrl,
+            'options' => [
+                'class' => 'navbar-inverse navbar-fixed-top',
+            ],
+        ]);
+
+
+        echo $this->render('../langues/select-language');
+        NavBar::end(); 
+
+        ?>
+
+        <div class="container">
+            <?= Breadcrumbs::widget([
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </div>
     </div>
 
     <footer class="footer">
@@ -69,8 +86,37 @@ AppAsset::register($this);
 
 
 
-
     <?php $this->endBody() ?>
+    <?php
+    $script = <<< JS
+    
+    $("form#lang-form").submit(function() {
+            var form = $(this);
+            // submit form
+            
+            console.log("Hyyeyeyeyeyeye");
+            $.ajax({
+                url: form.attr("action"),
+                type: "post",
+                data: form.serialize(),
+                success: function(response) {
+                    // reload the page after selecting a language
+                    console.log("Je suis entré");
+                    location.reload();
+                },
+                error: function() {
+                    console.log("Ajax: internal server error");
+                }
+            });
+            return false;
+        });
+JS;
+    $this->registerJs($script);
+    ?>
+
+
+
+
 </body>
 
 </html>
