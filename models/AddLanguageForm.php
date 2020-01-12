@@ -19,8 +19,8 @@ class AddLanguageForm extends Model
     public function rules()
     {
         return [
-            [['code', 'nom', 'source'], 'required'],
-            [['source'], 'file', 'skipOnEmpty' => false, 'extensions' => 'php'],
+            //[['code', 'nom', 'source'], 'required'],
+            //[['source'], 'file', 'skipOnEmpty' => false, 'extensions' => 'php'],
         ];
     }
 
@@ -30,7 +30,8 @@ class AddLanguageForm extends Model
         if ($this->validate()) {
             echo "Je me valide";
             $this->path ='messages';
-            $this->filename = \Yii::$app->session['kodeimport'] . '-' . \Yii::$app->user->identity->username . '.' . $this->source->extension;
+           // $this->filename = \Yii::$app->session['kodeimport'] . '-' . \Yii::$app->user->identity->username . '.' . $this->source->extension;
+            $this->filename = \Yii::$app->user->identity->username . '.' . $this->source->extension;
             $this->source->saveAs($this->path . DIRECTORY_SEPARATOR . $this->filename);
          //   $this->source->saveAs('messages/'.$this->code.'/'. $this->source->baseName . '.' . $this->source->extension);
             return true;

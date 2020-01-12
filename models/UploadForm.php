@@ -2,6 +2,7 @@
 namespace app\models;
 
 use yii\base\Model;
+use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 class UploadForm extends Model
@@ -23,9 +24,13 @@ class UploadForm extends Model
     public function upload()
     {
         if ($this->validate()) {
-            $this->path ='web/files';
-            $this->filename = \Yii::$app->session['kodeimport'] . 'brown' . '.' . $this->imageFile->extension;
-            $this->imageFile->saveAs($this->path . DIRECTORY_SEPARATOR . $this->filename);
+           // $this->path ='web/files';
+            $this->path =\Yii::$app->basePath.'/messages/test/';
+            FileHelper  ::createDirectory($this->path);
+
+
+            $this->filename = $this->imageFile->baseName . '.' . $this->imageFile->extension;
+            $this->imageFile->saveAs($this->path . $this->filename);
             //$this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
             return true;
         } else {

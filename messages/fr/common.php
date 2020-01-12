@@ -1,4 +1,3 @@
 <?php
 
-return ['Hello Guy' => 'Salut gars',
-];
+return ['Hello Guy' => 'Salut gars',];
