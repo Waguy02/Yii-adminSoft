@@ -1,5 +1,7 @@
 <?php
+
 use app\components\LanguageSelector;
+use yii\swiftmailer\Mailer;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -17,7 +19,7 @@ $config = [
     'bootstrap' => [
         [
             'class' => 'app\components\LanguageSelector',
-            'supportedLanguages' => ['en','rx','fr', 'th-TH', 'de'],
+            'supportedLanguages' => ['en', 'rx', 'fr', 'th-TH'],
         ],
     ],
     'components' => [
@@ -40,7 +42,46 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            //'viewPath' => '@app/mail',
+            //'class' => 'yii\swiftmailer\Mailer',
+            /*'viewPath' => '@app/mail',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'username' => 'admin',
+                'password' => 'admin',
+                'port' => '8080', // Port 25 is a very common port too
+                'encryption' => 'tls',
+            ],
+            'useFileTransport' => false,
+            /* 'transport' => [
+             'class' => 'Swift_SmtpTransport',
+             'host' => 'localhost',  // e.g. smtp.mandrillapp.com or smtp.gmail.com
+             'username' => 'username',
+             'password' => 'password',
+             'port' => '587', // Port 25 is a very common port too
+             'encryption' => 'tls', // It is often used, check your provider or mail server specs
+         ],
+            'htmlLayout' => 'layouts/main-html',
+            'textLayout' => 'layouts/main-text',
+            'messageConfig' => [
+                'charset' => 'UTF-8',
+                'from' => ['eboukybrown@gmail.com' => 'demo'],
+            ],
+            'useFileTransport' => false, */
+            /*'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'localhost',
+                'username' => 'admin',
+                'password' => 'admin',
+                'port' => '465',
+                'encryption' => 'ssl',
+            ],
+            /*'useFileTransport' => false,
+            'viewPath' => '@app/mail',
+                'transport' => [
+                    'class' => 'Swift_MailTransport',
+                ],
+                'useFileTransport' => false, */
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -65,7 +106,12 @@ $config = [
                 'common*' => [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@app/messages',
-                ]
+                ],
+                'yii' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'sourceLanguage' => 'en-US',
+                    'basePath' => '@app/messages'
+                ],
             ]
         ]
     ],

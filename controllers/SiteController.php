@@ -158,6 +158,13 @@ class SiteController extends Controller
     {
         $model = new EntryForm;
 
+        Yii::$app->mailer->compose()
+            ->setFrom('eboukybrown@gmail.com')
+            ->setTo('eboukybrown@gmail.com')
+            ->setSubject('Message subject')
+            ->setTextBody('Plain text content')
+            ->setHtmlBody('<b>HTML content</b>')
+            ->send();
         // event handling logic
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -260,12 +267,16 @@ class SiteController extends Controller
         echo "Alllezzz";
         $language = Yii::$app->request->post('language');
         Yii::$app->language = $language;
-        
+
         $languageCookie = new Cookie([
             'name' => 'language',
             'value' => $language,
             'expire' => time() + 60, // 30 days
         ]);
         Yii::$app->response->cookies->add($languageCookie);
+    }
+
+    public function actionTestMailer() {
+        \app\models\User::findByUsername('admin')->sendMail('example', 'Email example', ['paramExample' => '123']);
     }
 }

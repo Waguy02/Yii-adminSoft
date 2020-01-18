@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use yii\base\View;
 
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
@@ -9,6 +10,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public $password;
     public $authKey;
     public $accessToken;
+    public $email;
 
     private static $users = [
         '100' => [
@@ -17,6 +19,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
             'password' => 'admin',
             'authKey' => 'test100key',
             'accessToken' => '100-token',
+            'email' => 'eboukybrown@gmail.com'
         ],
         '101' => [
             'id' => '101',
@@ -24,6 +27,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
             'password' => 'demo',
             'authKey' => 'test101key',
             'accessToken' => '101-token',
+            'email' => 'eboukybrown@gmail.com'
         ],
     ];
 
@@ -100,5 +104,22 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return $this->password === $password;
+    }
+
+    public function sendMail($view, $subject, $params = []) {
+        // Set layout params
+        //\Yii::$app->mailer->getView()->params['userName'] = $this->username;
+
+        $result = \Yii::$app->mailer->compose([
+            'html' => 'views/' . $view . '-html',
+            'text' => 'views/' . $view . '-text',
+        ], $params)->setTo([$this->email => $this->username])
+            ->setSubject($subject)
+            ->send();
+
+        // Reset layout params
+       // \Yii::$app->mailer->getView()->params['userName'] = null;
+
+        return $result;
     }
 }

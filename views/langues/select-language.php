@@ -24,7 +24,7 @@ use yii\helpers\Html;
         ]) ?>
         
         <?= Html::dropDownList('language', Yii::$app->language, $items) ?>
-        <?= Html::submitButton('Change') ?>
+        <?= Html::submitButton(Yii::t('common','Change')) ?>
         <?= Html::endForm() ?>
 
     </li>
